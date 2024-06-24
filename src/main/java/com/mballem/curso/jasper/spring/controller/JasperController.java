@@ -4,6 +4,7 @@ import com.mballem.curso.jasper.spring.repository.EnderecoRepository;
 import com.mballem.curso.jasper.spring.repository.FuncionarioRepository;
 import com.mballem.curso.jasper.spring.repository.NiveisRepository;
 import com.mballem.curso.jasper.spring.service.JasperService;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -72,7 +74,18 @@ public class JasperController {
 
         byte[] bytes = jasperService.exportarPDF(code);
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        response.setHeader("Content-disposition", "inline; filename=relatorio" + code + ".pdf");
         response.getOutputStream().write(bytes);
+    }
+
+    @GetMapping("/relatorio/html/jr19/{code}")
+    public void exportRelatorio19HTML(@PathVariable("code") String code,
+                                  @RequestParam(name = "idf", required = false) Long id,
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) throws JRException {
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
+        jasperService.addParams("ID_FUNCIONARIO", id);
+        jasperService.exportarHTML(code, request, response).exportReport();
     }
 
     @GetMapping("/buscar/funcionarios")

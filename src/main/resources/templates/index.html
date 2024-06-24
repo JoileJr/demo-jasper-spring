@@ -8,8 +8,10 @@
 </head>
 <body>
     <h1>Bem vindo ao curso!!!</h1>
-    <h2>Relatório 01</h2>
+    <h2 th:text="${conn}"></h2>
     <a th:href="@{/reports}">Abrir Página</a>
-    <a th:href="@{/reports}">Abrir Página</a>
+    <hr>
+    <h2>Validação certificados</h2>
+    <p th:text="${mensagem}"></p>
 </body>
 </html>
